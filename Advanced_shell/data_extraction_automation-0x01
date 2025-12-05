@@ -9,8 +9,8 @@ height=$(jq -r ".height" $FILE_NAME)
 weight=$(jq -r ".weight" $FILE_NAME)
 type=$(jq -r ".type" $FILE_NAME)
 
-# converts weights and height
-height_m=$(echo "$height" | awk '{ print $1/10}')
-weight_kg=$(echo "$weight" | awk '{print $1/10}')
+# converts weights to kg  and height to meters
+formatted_weight=$(echo "$height" | awk '{ print $1/10}')
+formatted_height=$(echo "$weight" | awk '{print $1/10}')
 
-echo "$name" is of "$type" Electric, weighs "$weight_kg", and is "$height_m" tall.
+echo $name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall.
