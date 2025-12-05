@@ -1,5 +1,6 @@
 #! /bin/bash
 echo "Making a request to a pokemon pikachu API"
+POKE_API="https://pokeapi.co/api/v2/pokemon"
 
 URL='https://pokeapi.co/api/v2/pokemon/'
 OUTPUT_FILE='data.json'

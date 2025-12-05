@@ -1,0 +1,34 @@
+#!/bin/bash
+
+FILE_PATH='data.json'
+POKE_API="https://pokeapi.co/api/v2/pokemon"
+
+# make dir to store pikomon files
+
+mkdir -p pokemons
+
+# Pikomon names
+POKEMONS_NAMES=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon" "charizard")
+
+for pokemon in "${POKEMONS_NAMES[@]}"; do
+    echo Processing request for "$pokemon"......
+    pokemon_url=$(jq -r --arg n "$pokemon" '.results[] | select(.name==$n) | .url' data.json)
+    status_code=$(curl -s -o /dev/null -w "%{http_code}" $pokemon_url)
+
+    if [[ "$status_code" -eq 200 ]]; then
+        file_path=pokemons/$pokemon.json
+        response=$(curl "$pokemon_url") &
+        echo Saving data in "$file_path"
+        echo "$response" | jq . > "$file_path"
+
+        echo  Data saved
+    else
+        echo Error occured while fetching $pokemon data >> error.txt
+    fi
+    # wait for two seconds to avoid rate limiting issues
+    sleep 2
+
+done
+
+wait 
+echo "Task completed, check error.txt file for errors"
