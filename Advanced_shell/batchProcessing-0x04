@@ -29,6 +29,12 @@ for pokemon in "${POKEMONS_NAMES[@]}"; do
     sleep 2
 
 done
+# view running background jobs 
+jobs
 
+# wait for jobs 
 wait 
+
+# continue with other program
 echo "Task completed, check error.txt file for errors"
+[pkill]

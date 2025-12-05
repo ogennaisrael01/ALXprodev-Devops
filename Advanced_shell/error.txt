@@ -1,2 +1,5 @@
-Error occured
-Error occured while fetch bulbasaur data
+Error occured while fetching bulbasaur data
+Error occured while fetching bulbasaur data
+Error occured while fetching bulbasaur data
+Error occured while fetching bulbasaur data
+Error occured while fetching bulbasaur data
