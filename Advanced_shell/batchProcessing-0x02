@@ -4,28 +4,30 @@ FILE_PATH='data.json'
 
 # make dir to store pikomon files
 
-mkdir -p pikomons
+mkdir -p pokemons
 
 # Pikomon names
-PIKOMONS_NAMES=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon" "charizard")
+POKEMONS_NAMES=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon" "charizard")
 
-for pikomon in "${PIKOMONS_NAMES[@]}"; do
-    echo Processing request for "$pikomon"......
-    pikomon_url=$(jq -r --arg n "$pikomon" '.results[] | select(.name==$n) | .url' data.json)
-    status_code=$(curl -s -o /dev/null -w "%{http_code}" $pikomon_url)
+for pokemon in "${POKEMONS_NAMES[@]}"; do
+    echo Processing request for "$pokemon"......
+    pokemon_url=$(jq -r --arg n "$pokemon" '.results[] | select(.name==$n) | .url' data.json)
+    status_code=$(curl -s -o /dev/null -w "%{http_code}" $pokemon_url)
 
-    # if the response  is successful, save directly to a json file
-    if [[ "$status_code" -eq 200 ]]; then
-        # making request
-        file_path=pikomons/$pikomon.json
-        response=$(curl "$pikomon_url")
-        echo Saving data in "$file_path"
-        echo "$response" | jq . > "$file_path"
+    for i in {1..3}; do
+        if [[ "$status_code" -eq 200 ]]; then
+            file_path=pokemons/$pokemon.json
+            response=$(curl "$pokemon_url")
+            echo Saving data in "$file_path"
+            echo "$response" | jq . > "$file_path"
 
-        echo  Data saved
-    else
-        echo $(date) - Error saving to file  > errors.txt
-    fi
-    # wait for two seconds to avoid rate limiting issues
-    sleep 2
+            echo  Data saved
+        else
+            echo Error occured. retrying .....
+        fi
+        # wait for two seconds to avoid rate limiting issues
+        sleep 2
+    done
+
+    echo Unknown Error occured while retrieving $pokemon!
 done
