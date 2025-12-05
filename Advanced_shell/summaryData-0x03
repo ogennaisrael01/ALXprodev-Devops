@@ -1,0 +1,38 @@
+#!/bin/bash
+dir="pokemons"
+pokemon_files=("bulbasaur.json" "charizard.json" "ivysaur.json" "venusaur.json" "charmeleon.json" "charmander.json")
+
+# create a csv file to store name, height, and weight
+echo name, height m, weight kg > pokemon_report.csv
+
+total_height=0
+total_weight=0
+for file in "${pokemon_files[@]}"; do
+    file_path="$dir"/"$file"
+    name=$(jq -r ".name"  $file_path)
+    height=$(jq -r ".height" $file_path)
+    weight=$(jq -r ".weight" $file_path)
+
+    if [[ -n "$name" && -n "$height" && -n "$weight" ]]; then
+        # save pokemon data to csv
+        echo Saving pokemon data.... 
+        echo "$name", "$height", "$weight" >> pokemon_report.csv
+        echo "Data saved"
+    else
+        echo Not found
+    fi
+
+    (( total_height += "$height" ))
+    (( total_weight += "$weight" ))
+done
+
+# update csv file with the average heigth and weight for all pokemons 
+len_total_pokemons=$(echo "${#pokemon_files[@]}")
+average_height=$(( $total_height / $len_total_pokemons ))
+average_weight=$(( $total_weight / $len_total_pokemons ))
+
+echo -e "\nAverage Height":  $average_height m >> pokemon_report.csv
+echo Average Weight: $average_weight kg >> pokemon_report.csv
+
+
+
